@@ -1,0 +1,62 @@
+clear all;
+clc;
+
+
+SimResult=[];
+
+LIGHTFIELDSCALE=4;
+lambda=0.006;
+P_Walk=0.65;
+LIFETIME=5;
+L_min=1;
+L_max=10;
+USER=3;
+
+
+Path='FigureData\';
+
+if (exist('FigureData','dir'))    
+    cmd = sprintf('rmdir /Q /S  %s', 'FigureData');
+    [status,result] = system(cmd);        
+end  
+
+cmd = sprintf('mkdir %s', 'FigureData');
+[status,result] = system(cmd);  
+
+% USER
+for USER=0:2:10
+    
+    filename=sprintf('%sResultUSER_%f.txt',Path,USER);
+    Result_temp=calculation(LIGHTFIELDSCALE, lambda, P_Walk, LIFETIME, USER, L_min, L_max);
+    dlmwrite(filename,Result_temp,'precision', 8);
+    SimResult=[SimResult; Result_temp];
+    
+end
+
+disp(SimResult);
+
+Scheme1=[];
+for i=1:4:21
+    Scheme1=[Scheme1; SimResult(i,5) SimResult(i,6)];
+end
+
+Scheme2=[];
+for i=2:4:22
+    Scheme2=[Scheme2; SimResult(i,5) SimResult(i,6)];
+end
+
+Scheme3=[];
+for i=3:4:23
+    Scheme3=[Scheme3; SimResult(i,5) SimResult(i,6)];
+end
+
+Scheme4=[];
+for i=4:4:24
+    Scheme4=[Scheme4; SimResult(i,5) SimResult(i,6)];
+end
+
+plot(Scheme1(:,1),Scheme1(:,2),'-dk',Scheme2(:,1),Scheme2(:,2),'-ob',Scheme3(:,1),Scheme3(:,2),'-*g',Scheme4(:,1),Scheme4(:,2),'-sr');
+xlabel('Storage Cost');ylabel('Transmission Rate');
+legend('Only I with no caching','Adjacent P with no caching','Adjacent P with caching','Optimized Structure with caching');
+
+csvwrite('FigureData\CalculationResult.txt',SimResult);

@@ -1,0 +1,24 @@
+Scheme1=[];
+for i=1:4:21
+    Scheme1=[Scheme1; SimResult(i,4) SimResult(i,7)];
+end
+
+Scheme2=[];
+for i=2:4:22
+    Scheme2=[Scheme2; SimResult(i,4) SimResult(i,7)];
+end
+
+Scheme3=[];
+for i=3:4:23
+    Scheme3=[Scheme3; SimResult(i,4) SimResult(i,7)];
+end
+
+Scheme4=[];
+for i=4:4:24
+    Scheme4=[Scheme4; SimResult(i,4) SimResult(i,7)];
+end
+
+hold off
+plot(Scheme1(:,1),Scheme1(:,2),'-dk',Scheme2(:,1),Scheme2(:,2),'-ob',Scheme3(:,1),Scheme3(:,2),'-*g',Scheme4(:,1),Scheme4(:,2),'-sr');
+xlabel('Number of Coopertive Users');ylabel('Lagrangian Cost');
+legend('Only I with no caching','Adjacent P with no caching','Adjacent P with caching','Optimized Structure with caching');

@@ -1,0 +1,76 @@
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+    $.getScript( "https://www.gstatic.com/charts/loader.js", function() {
+      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+      {
+         google.charts.load('current', {'packages':['corechart']});
+      }
+
+      google.charts.setOnLoadCallback(drawChart);
+    });
+    
+    function drawChart() {
+        var dataArr = [['Amount', '10', '15', '20', '5', '8'], ['1000', 16.486956521739128, 7.955491329479771, 4.993586005830906, 26.302380952380947, 20.386792452830193], ['2000', 16.607194244604315, 8.1205, 4.829323308270676, 25.275909090909085, 20.41], ['4000', 16.458139534883713, 7.965306122448976, 5.103676470588234, 25.60582959641255, 20.187804878048798], ['8000', 15.78741496598641, 7.91380952380952, 5.070238095238094, 26.107792207792222, 20.476886792452824], ['16000', 15.518884120171677, 7.902631578947366, 4.745238095238096, 25.847826086956527, 19.938410596026497], ['24000', 16.494186046511626, 7.774257425742568, 4.685185185185188, 26.225373134328336, 19.81843575418994], ['32000', 15.96391752577319, 7.704678362573102, 4.633689839572189, 25.821698113207532, 19.586153846153834], ['36000', 16.17533039647576, 7.4772727272727275, 4.529545454545455, 25.62255319148935, 19.504697986577185], ['48000', 15.276100628930813, 7.506486486486486, 4.4491452991452975, 24.956989247311842, 18.841422594142244]];
+        var grTitle = 'Test Result Strategy 4';
+        var height = 600;
+        var width = 1000;
+        var logScaleFlag = false;
+        var vAxisTitle = 'Avg Fps';
+        var vAxisOpt;
+        if(logScaleFlag)
+        {
+            vAxisOpt = { title: vAxisTitle, logScale: true, format: 'scientific'};
+        }
+        else
+        {
+            vAxisOpt = { title: vAxisTitle };
+        }
+
+        var options = {
+            width: width,
+            height: height,
+            explorer: { actions: ['dragToZoom', 'rightClickToReset'], maxZoomIn: 0.01 },
+            curveType: 'function',
+            title: grTitle,
+            titleTextStyle: { fontSize: 18, bold: true },
+            hAxis: { title: dataArr[0][0] },
+            vAxis: vAxisOpt,
+            
+        };
+
+        var data = new google.visualization.DataTable();
+        var csvOut = "data:text/csv;charset=utf-8";
+        // Add column headers
+        data.addColumn('string',dataArr[0][0]);
+        csvOut += ',' + dataArr[0][0];
+        for (var j = 0; j < dataArr[0].length-1; j++)
+        {
+           data.addColumn('number',dataArr[0][j+1]);
+           csvOut += ',' + dataArr[0][j+1];
+        }
+        csvOut += '\n';
+
+        // Add columns
+        for (var i = 1; i < dataArr.length; i++)
+        {
+            data.addRow(dataArr[i]);
+            csvOut += dataArr[i].join(",") + '\n';
+        }
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_2'));
+
+        chart.draw(data, options);
+        document.getElementById('pic_div_2').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
+        document.getElementById('csvFileDl_2').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
+    }
+    </script>
+</head>
+<body>
+    <div id="chart_div_2"></div>
+    <div id="pic_div_2"></div>
+    <div id="csvFileDl_2"></div>
+</body>
+</html>

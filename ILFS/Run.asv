@@ -1,0 +1,46 @@
+clear all;
+clc;
+
+
+SimResult=[];
+
+LIGHTFIELDSCALE=4;
+lambda=0;
+P_Walk=0.65;
+LIFETIME=8;
+L_min=1;
+L_max=5;
+USER=2;
+
+% 
+Path='FigureData\';
+
+if (exist('FigureData','dir'))    
+    cmd = sprintf('rmdir /Q /S  %s', 'FigureData');
+    [status,result] = system(cmd);        
+end  
+
+cmd = sprintf('mkdir %s', 'FigureData');
+[status,result] = system(cmd);  
+
+% Lambda
+
+lambda_start=0;
+lambda_step=0.05;
+lambda_end=0.5;
+
+for lambda_p=lambda_start:lambda_step:lambda_end
+    
+    filename=sprintf('%sResultLambda_%f.txt',Path,lambda_p);
+    Result_temp=calculation(LIGHTFIELDSCALE, lambda_p, P_Walk, LIFETIME, USER, L_min, L_max);
+    dlmwrite(filename,Result_temp,'precision', 8);
+    SimResult=[SimResult; Result_temp];
+    
+end
+
+disp(SimResult);
+
+filename=sprintf('FigureData\\CalculationResultLambda.txt');
+csvwrite(filename,SimResult);
+
+plotfigure('Lambda',lambda_start,lambda_step,lambda_end);
